@@ -44,7 +44,7 @@
 
 /* USER CODE BEGIN Includes */
 #define NR_MIDI_BYTES 3
-
+char aMESSAGE[8] = "WHATEVER";
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -109,6 +109,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  HAL_UART_Transmit(&huart1, &aMESSAGE,10, 100);
+  //HAL_UART_Transmit(&huart1, (uint8_t *)aRxBuffer, NR_MIDI_BYTES, 100);
   while (1)
   {
 
