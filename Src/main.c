@@ -41,10 +41,11 @@
 #include "stm32f1xx_hal.h"
 #include "usart.h"
 #include "gpio.h"
+#include "midi.h"
 
 /* USER CODE BEGIN Includes */
 #define NR_MIDI_BYTES 3
-char aMESSAGE[8] = "WHATEVER";
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -54,7 +55,6 @@ char aMESSAGE[8] = "WHATEVER";
 extern UART_HandleTypeDef huart1;
 
 uint8_t aRxBuffer[NR_MIDI_BYTES] = {0};
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -109,8 +109,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UART_Transmit(&huart1, &aMESSAGE,10, 100);
-  //HAL_UART_Transmit(&huart1, (uint8_t *)aRxBuffer, NR_MIDI_BYTES, 100);
   while (1)
   {
 
@@ -177,7 +175,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 /**
   * @brief Rx Transfer completed callbacks
-  * @param huart: uart handle
+  * @param huart: UART Handle
   * @retval None
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -188,12 +186,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_UART_RxCpltCallback can be implemented in the user file
    */
-  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_11);
+//  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_11);
 
-  if (aRxBuffer[0] > 127 && aRxBuffer[1] < 128 && aRxBuffer[2] < 128)
+  Split_Midi(aRxBuffer);
+
+  if (midiData.channel == 0x1)
 	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
-  HAL_UART_Transmit(&huart1, (uint8_t *)aRxBuffer, NR_MIDI_BYTES, 100);
 
   HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, NR_MIDI_BYTES);
 }

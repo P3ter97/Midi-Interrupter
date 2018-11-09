@@ -64,3 +64,9 @@ dkms.conf
 \.mxproject
 
 *.launch
+
+*.bak
+
+*.ld
+
+Debug/
